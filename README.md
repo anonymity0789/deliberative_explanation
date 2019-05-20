@@ -15,10 +15,19 @@
 cub200
 
 |_ CUB_200_2011
+  |_ attributes
+  |_ images
+  |_ parts
+  |_ train_test_split.txt
+  |_ ...
 
 ade
 
 |_ ADEChallengeData2016
+  |_ annotations
+  |_ images
+  |_ objectInfo 150.txt
+  |_ sceneCategories.txt
  
 
 ## Implementation details
@@ -68,28 +77,61 @@ train_hp_ade_res.py
 
 ### visualization
 
-Three types of attribution methods are compared, baseline [gradient based](https://ieeexplore.ieee.org/document/8237336), state-of-the-art [integrated gradient based](https://dl.acm.org/citation.cfm?id=3306024) and ours.
+Three types of attribution methods are compared, baseline [gradient based](https://ieeexplore.ieee.org/document/8237336), state-of-the-art [integrated gradient (IG) based](https://dl.acm.org/citation.cfm?id=3306024) and ours (gradient-Hessian(2ndG)).
 
 In order to reproduce experiment results,
 
 1. for comparison of different scores,
+```
+get_cs_cub_insecurity_vgg.py
+get_entropy_cub_insecurity_vgg.py
+get_hp_cub_insecurity_vgg.py
+get_cs_ade_insecurity_vgg.py
+get_entropy_ade_insecurity_vgg.py
+get_hp_ade_insecurity_vgg.py
+```
 
 2. for comparison of different hidden layers,
+```
+get_hp_cub_insecurity_vgg.py
+get_hp_ade_insecurity_vgg.py
+```
+Additionally, the layer number need to be changed for different hidden layers, 12, 22, 32, 42 w.r.t. conv2_2, conv3_3, conv4_3, conv5_3.
+
 
 3. for comparison of different attribution maps,
+```
+get_hp_cub_insecurity_vgg.py
+get_hp_cub_insecurity_vgg_IG.py
+get_hp_cub_insecurity_vgg_2ndG.py
+get_hp_ade_insecurity_vgg.py
+get_hp_ade_insecurity_vgg_IG.py
+get_hp_ade_insecurity_vgg_2ndG.py
+```
 
 4. for comparison of different architectures,
 
+```
+get_hp_cub_insecurity_alexnet.py
+get_hp_cub_insecurity_vgg.py
+get_hp_cub_insecurity_res.py
+```
 
 ### results presenting
 
-plot the precision-recall curves on CUB200,
+1. insecurity extraction,
+```
+get_hp_cub_insecurity_vgg_show.py
+get_hp_ade_insecurity_vgg_sho.py
+```
+
+2. plot the precision-recall curves on CUB200,
 
 ```
 plot_recall_precision_curve_std.py
 ```
 
-show average IoU precision on ADE20K,
+3. show average IoU precision on ADE20K,
 
 ```
 output_IOU_threshold_std.py
