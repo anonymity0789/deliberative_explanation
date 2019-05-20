@@ -1,74 +1,129 @@
 import numpy as np
-from scipy import misc
+from scipy._lib._util import _asarray_validated
 
-def softmax(x):
-    ex = np.exp(x)
-    sum_ex = np.sum(np.exp(x))
-    return ex/sum_ex
 
-ADE_gt_tr = './ADEChallengeData2016/ADE_gt_tr.txt'
-img_path_list_tr = []
-img_label_list_tr = []
-with open(ADE_gt_tr, 'r') as rf:
+def compute_ClsSimilarity_underPart(class_attributes, part_type):
+    ClsSimilarity_underPart = np.zeros((200, 200))
+    for i_p in range(part_type):
+        part_attributes = softmax(class_attributes[i_p], axis=1)
+        for i in range(200):
+            for j in range(i+1, 200):
+                ClsSimilarity_underPart[i, j] = ClsSimilarity_underPart[i, j] + Dominik2003IT(part_attributes[i], part_attributes[j])
+                ClsSimilarity_underPart[j, i] = ClsSimilarity_underPart[i, j]
+    return ClsSimilarity_underPart / part_type
+
+
+def Dominik2003IT(distribution1, distribution2):
+    term1 = distribution1 * np.log((2.0 * distribution1) / (distribution1 + distribution2))
+    term2 = distribution2 * np.log((2.0 * distribution2) / (distribution1 + distribution2))
+    return np.sum(term1 + term2)
+
+def logsumexp(a, axis=None, b=None, keepdims=False, return_sign=False):
+
+    a = _asarray_validated(a, check_finite=False)
+    if b is not None:
+        a, b = np.broadcast_arrays(a, b)
+        if np.any(b == 0):
+            a = a + 0.  # promote to at least float
+            a[b == 0] = -np.inf
+
+    a_max = np.amax(a, axis=axis, keepdims=True)
+
+    if a_max.ndim > 0:
+        a_max[~np.isfinite(a_max)] = 0
+    elif not np.isfinite(a_max):
+        a_max = 0
+
+    if b is not None:
+        b = np.asarray(b)
+        tmp = b * np.exp(a - a_max)
+    else:
+        tmp = np.exp(a - a_max)
+
+    # suppress warnings about log of zero
+    with np.errstate(divide='ignore'):
+        s = np.sum(tmp, axis=axis, keepdims=keepdims)
+        if return_sign:
+            sgn = np.sign(s)
+            s *= sgn  # /= makes more sense but we need zero -> zero
+        out = np.log(s)
+
+    if not keepdims:
+        a_max = np.squeeze(a_max, axis=axis)
+    out += a_max
+
+    if return_sign:
+        return out, sgn
+    else:
+        return out
+
+
+def softmax(x, axis=None):
+    # compute in log space for numerical stability
+    return np.exp(x - logsumexp(x, axis=axis, keepdims=True))
+
+
+flist = './CUB_200_2011/attributes/class_attribute_labels_continuous.txt'
+part_num = 15
+class_num = 200
+attributes = np.zeros((200, 312))
+
+class_index = 0
+with open(flist, 'r') as rf:
     for line in rf.readlines():
-        img_name, img_label, img_index = line.strip().split()
-        img_name = img_name[:23] + "annotations" + img_name[29:-3] + "png"
-        img_path_list_tr.append(img_name)
-        img_label_list_tr.append(int(img_label))
-
-Class_num = 1040
-# all_cls_attributes_info = np.zeros((Class_num, 150))
-# img_label_list_tr = np.array(img_label_list_tr)
-# for i_cls in range(Class_num):
-#     print(i_cls)
-#     idx = np.where(img_label_list_tr == i_cls)[0]
-#     cur_img_path_list_tr = [img_path_list_tr[i] for i in idx]
-#     cls_attributes_info = np.zeros((len(cur_img_path_list_tr), 150))
-#
-#     if len(cur_img_path_list_tr) > 0:
-#         for i_img in range(len(cur_img_path_list_tr)):
-#             image = misc.imread(cur_img_path_list_tr[i_img])
-#             image = image.flatten().tolist()
-#             objectList = list(set(image))
-#             objectList.sort()
-#             objectList = np.array(objectList)
-#             objectList = objectList[objectList != 0]
-#             cls_attributes_info[i_img, objectList-1] = 1
-#         cls_attributes_info = np.sum(cls_attributes_info, axis=0) / len(cur_img_path_list_tr)
-#         # cls_attributes_info = softmax(cls_attributes_info)
-#         all_cls_attributes_info[i_cls, :] = cls_attributes_info
-#
-# np.save('./ADEChallengeData2016/all_cls_attributes_info.npy', all_cls_attributes_info)
-
-def compute_ClsSimilarity_underObject(class_attributes):
-    ClsSimilarity_underObject = np.zeros((1040, 1040))
-    for i in range(1040):
-        for j in range(i+1, 1040):
-            ClsSimilarity_underObject[i, j] = (class_attributes[i] + class_attributes[j]) / 2.0
-            ClsSimilarity_underObject[j, i] = ClsSimilarity_underObject[i, j]
+        attributes_per_class = line.strip().split()
+        attributes[class_index, :] = np.float32(attributes_per_class)
+        class_index = class_index + 1
 
 
+similarityMatrix_cls_part = np.zeros((class_num, class_num, part_num))
+for i_part in range(part_num):
+    if i_part == 0:
+        similarityMatrix_cls_part[:, :, i_part] = compute_ClsSimilarity_underPart([attributes[:, 59 - 1:73], attributes[:, 237 - 1: 240]], 2)
+    if i_part == 1:
+        similarityMatrix_cls_part[:, :, i_part] = compute_ClsSimilarity_underPart([attributes[:, 1 - 1:9], attributes[:, 150 - 1: 152], attributes[:, 279 - 1:293]], 3)
+    if i_part == 2:
+        similarityMatrix_cls_part[:, :, i_part] = compute_ClsSimilarity_underPart([attributes[:, 198 - 1:212], attributes[:, 245 - 1: 248]], 2)
+    if i_part == 3:
+        similarityMatrix_cls_part[:, :, i_part] = compute_ClsSimilarity_underPart([attributes[:, 55 - 1:58], attributes[:, 106 - 1: 120]], 2)
+    if i_part == 4:
+        similarityMatrix_cls_part[:, :, i_part] = compute_ClsSimilarity_underPart([attributes[:, 294 - 1: 308]], 1)
+    if i_part == 5:
+        similarityMatrix_cls_part[:, :, i_part] = compute_ClsSimilarity_underPart([attributes[:, 153 - 1: 167]], 1)
+    if i_part == 6:
+        similarityMatrix_cls_part[:, :, i_part] = compute_ClsSimilarity_underPart([attributes[:, 136 - 1:149]], 1)
+    if i_part == 7:
+        similarityMatrix_cls_part[:, :, i_part] = compute_ClsSimilarity_underPart([attributes[:, 264 - 1:278]], 1)
+    if i_part == 8:
+        similarityMatrix_cls_part[:, :, i_part] = compute_ClsSimilarity_underPart([attributes[:, 10 - 1:24], attributes[:, 213 - 1: 217], attributes[:, 309 - 1: 312]], 3)
+    if i_part == 9:
+        similarityMatrix_cls_part[:, :, i_part] = compute_ClsSimilarity_underPart([attributes[:, 183 - 1:197]], 1)
+    if i_part == 10:
+        similarityMatrix_cls_part[:, :, i_part] = compute_ClsSimilarity_underPart([attributes[:, 136 - 1:149]], 1)
+    if i_part == 11:
+        similarityMatrix_cls_part[:, :, i_part] = compute_ClsSimilarity_underPart([attributes[:, 264 - 1:278]], 1)
+    if i_part == 12:
+        similarityMatrix_cls_part[:, :, i_part] = compute_ClsSimilarity_underPart([attributes[:, 10 - 1:24], attributes[:, 213 - 1: 217], attributes[:, 309 - 1: 312]], 3)
+    if i_part == 13:
+        similarityMatrix_cls_part[:, :, i_part] = compute_ClsSimilarity_underPart([attributes[:, 74 - 1:79], attributes[:, 80 - 1: 94], attributes[:, 168 - 1: 182], attributes[:, 241 - 1: 244]], 4)
+    if i_part == 14:
+        similarityMatrix_cls_part[:, :, i_part] = compute_ClsSimilarity_underPart([attributes[:, 121 - 1: 135]], 1)
 
-Object_num = 150
-all_cls_attributes_info = np.load('./ADEChallengeData2016/all_cls_attributes_info.npy')
-all_cls_attributes_info[all_cls_attributes_info < 0.3] = 0
-similarityMatrix_cls_part = np.zeros((Class_num, Class_num, Object_num))
-for i_obj in range(Object_num):
-    similarityMatrix_cls_part[:, :, i_obj] = compute_ClsSimilarity_underObject(all_cls_attributes_info[:, i_obj])
+# np.save('./CUB_200_2011/attributes/similarityMatrix_cls_part.npy', similarityMatrix_cls_part)
+# similarityMatrix_cls_part = np.load('./CUB_200_2011/attributes/similarityMatrix_cls_part.npy')
 
 # threshold and remain most similar parts between each class pair
-threshold = np.sort(similarityMatrix_cls_part.flatten())[int(0.8*Class_num*Class_num*Object_num)]
+threshold = np.sort(similarityMatrix_cls_part.flatten())[int(0.2*class_num*class_num*part_num)]
 similarityMatrix_cls_part_copy = np.copy(similarityMatrix_cls_part)
-similarityMatrix_cls_part_copy[similarityMatrix_cls_part >= threshold] = 1
-similarityMatrix_cls_part_copy[similarityMatrix_cls_part < threshold] = 0
+similarityMatrix_cls_part_copy[similarityMatrix_cls_part <= threshold] = 1
+similarityMatrix_cls_part_copy[similarityMatrix_cls_part > threshold] = 0
 similarityMatrix_cls_part_copy = similarityMatrix_cls_part_copy.astype(int)
 
-
-com_extracted_attributes = np.zeros((Class_num, Class_num), dtype=object)
-for i in range(Class_num):
-    for j in range(i+1, Class_num):
-        object_idx = np.argwhere(similarityMatrix_cls_part_copy[i, j, :] == 1).flatten()
-        object_idx = object_idx.tolist()
-        com_extracted_attributes[i, j] = object_idx
-        com_extracted_attributes[j, i] = object_idx
-np.save('./ADEChallengeData2016/com_extracted_attributes_02.npy', com_extracted_attributes)
+com_extracted_attributes = np.zeros((class_num, class_num), dtype=object)
+for i in range(class_num):
+    for j in range(i+1, class_num):
+        part_idx = np.argwhere(similarityMatrix_cls_part_copy[i, j, :] == 1).flatten()
+        part_idx = part_idx.tolist()
+        com_extracted_attributes[i, j] = part_idx
+        com_extracted_attributes[j, i] = part_idx
+np.save('./cub200/Dominik2003IT_com_extracted_attributes_02.npy', com_extracted_attributes)
