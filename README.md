@@ -13,9 +13,11 @@
 [CUB200](http://www.vision.caltech.edu/visipedia/CUB-200-2011.html) and [ADE20K](http://sceneparsing.csail.mit.edu/) are used. Please organize them as below after download,
 
 cub200
+
 |_ CUB_200_2011
 
 ade
+
 |_ ADEChallengeData2016
  
 
