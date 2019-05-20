@@ -13,33 +13,24 @@
 [CUB200](http://www.vision.caltech.edu/visipedia/CUB-200-2011.html) and [ADE20K](http://sceneparsing.csail.mit.edu/) are used. Please organize them as below after download,
 
 cub200
-
+```
 |_ CUB_200_2011
-
   |_ attributes
-  
   |_ images
-  
   |_ parts
-  
   |_ train_test_split.txt
-  
   |_ ...
-
+```
 
 
 ade
-
+```
 |_ ADEChallengeData2016
-
   |_ annotations
-  
   |_ images
-  
   |_ objectInfo 150.txt
-  
   |_ sceneCategories.txt
- 
+```
 
 ## Implementation details
 
