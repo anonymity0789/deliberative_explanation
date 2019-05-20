@@ -81,4 +81,23 @@ In order to reproduce experiment results,
 4. for comparison of different architectures,
 
 
+### results presenting
+
+plot the precision-recall curves on CUB200,
+
+```
+plot_recall_precision_curve_std.py
+```
+
+show average IoU precision on ADE20K,
+
+```
+output_IOU_threshold_std.py
+```
+
+### pretrained models
+
+The pre-trained models for all experiments are availiable.
+
+
 
