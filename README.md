@@ -141,7 +141,7 @@ output_IOU_threshold_std.py
 
 ### pretrained models
 
-The pre-trained models for all experiments are availiable [here](https://drive.google.com/drive/folders/1EGjw-vl5CnKPss2baOh69S9gPGbu9AUk?usp=sharing) .
+The pre-trained models for all experiments are availiable [here](https://drive.google.com/drive/folders/17r0y8rsgQtyn2kQVfhjpRQ8NPqQpI2Gr?usp=sharing) and [here](https://drive.google.com/drive/folders/1JwT2APo6UaHyAEZBEv85wiLSHB1H7dnF?usp=sharing). (Due to maximum space limitation of google drive, the models were separately uploaded.) 
 
 ## References
 
