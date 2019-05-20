@@ -22,3 +22,63 @@ ade
  
 
 ## Implementation details
+
+### data preparation
+
+build train/validation/test sets,
+
+```
+make_cub_list.py
+make_ade_list.py
+```
+
+compute similarity for parts on CUB200 and objects on ADE20K,
+
+```
+create_similarityMatrix_cls_part.py
+create_similarityMatrix_cls_object.py
+```
+
+prepare attribute location data on CUB200
+
+```
+get_gt_partLocs.py
+```
+
+### training
+
+Two types of models need to be trained, the standard CNN classifier and [Hardness predictor](http://openaccess.thecvf.com/content_ECCV_2018/html/Pei_Wang_Towards_Realistic_Predictors_ECCV_2018_paper.html). Three most popular architectures were tested. For the classifier,
+```
+train_cub_alexnet.py
+train_cub_vgg.py
+train_cub_res.py
+train_ade_alexnet.py
+train_ade_vgg.py
+train_ade_res.py
+```
+for the hardness predictor,
+```
+train_hp_cub_alexnet.py
+train_hp_cub_vgg.py
+train_hp_cub_res.py
+train_hp_ade_alexnet.py
+train_hp_ade_vgg.py
+train_hp_ade_res.py
+```
+
+### visualization
+
+Three types of attribution methods are compared, baseline [gradient based](https://ieeexplore.ieee.org/document/8237336), state-of-the-art [integrated gradient based](https://dl.acm.org/citation.cfm?id=3306024) and ours.
+
+In order to reproduce experiment results,
+
+1. for comparison of different scores,
+
+2. for comparison of different hidden layers,
+
+3. for comparison of different attribution maps,
+
+4. for comparison of different architectures,
+
+
+
