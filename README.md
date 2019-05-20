@@ -15,32 +15,29 @@
 cub200
 
 |_ CUB_200_2011
+
   |_ attributes
+  
   |_ images
+  
   |_ parts
+  
   |_ train_test_split.txt
+  
   |_ ...
 
-
-VOCdevkit
-|_ VOC2007
-  |_ JPEGImages
-  |  |_ <000001>.jpg
-  |  |_ ...
-  |  |_ <009963>.jpg
-  |_ Annotations
-  |  |_ <000001>.xml
-  |  |_ ...
-  |  |_ <009963>.xml
-  |_ ...
 
 
 ade
 
 |_ ADEChallengeData2016
+
   |_ annotations
+  
   |_ images
+  
   |_ objectInfo 150.txt
+  
   |_ sceneCategories.txt
  
 
