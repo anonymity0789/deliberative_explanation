@@ -21,6 +21,20 @@ cub200
   |_ train_test_split.txt
   |_ ...
 
+
+VOCdevkit
+|_ VOC2007
+  |_ JPEGImages
+  |  |_ <000001>.jpg
+  |  |_ ...
+  |  |_ <009963>.jpg
+  |_ Annotations
+  |  |_ <000001>.xml
+  |  |_ ...
+  |  |_ <009963>.xml
+  |_ ...
+
+
 ade
 
 |_ ADEChallengeData2016
