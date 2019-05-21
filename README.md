@@ -158,9 +158,9 @@ model     | #GPUs | train time |
 AlexNet-CNN-baseline     | 1 | ~50min    | 
 VGG16-CNN-baseline     | 2 | ~70min    |
 Res50-CNN-baseline     | 1 | ~60min    |
-AlexNet-HardnessPredictor     | 4 | ~60min    | 
-VGG16-HardnessPredictor     | 4 | ~80min   |
-Res50-HardnessPredictor     | 2 | ~70min    |
+AlexNet-HardnessPredictor     | 4 | ~85min    | 
+VGG16-HardnessPredictor     | 4 | ~120min   |
+Res50-HardnessPredictor     | 2 | ~100min    |
 
 2. ADE20K (Train/Val/Test Size: 18189/2021/2000, please refer to our paper for other setting details.)
 
@@ -170,9 +170,9 @@ model     | #GPUs | train time |
 AlexNet-CNN-baseline     | 1 | ~65min    | 
 VGG16-CNN-baseline     | 2 | ~130min    |
 Res50-CNN-baseline     | 1 | ~100min    |
-AlexNet-HardnessPredictor     | 4 | ~70min    | 
-VGG16-HardnessPredictor     | 4 | ~140min   |
-Res50-HardnessPredictor     | 2 | ~110min    |
+AlexNet-HardnessPredictor     | 4 | ~110min    | 
+VGG16-HardnessPredictor     | 4 | ~220min   |
+Res50-HardnessPredictor     | 2 | ~170min    |
 
 ### inference
 
