@@ -143,6 +143,73 @@ output_IOU_threshold_std.py
 
 The pre-trained models for all experiments are availiable [here](https://drive.google.com/drive/folders/17r0y8rsgQtyn2kQVfhjpRQ8NPqQpI2Gr?usp=sharing) and [here](https://drive.google.com/drive/folders/1JwT2APo6UaHyAEZBEv85wiLSHB1H7dnF?usp=sharing). (Due to maximum space limitation of google drive, the models were separately uploaded.) 
 
+
+## Time and Space
+
+All experiments were run on NVIDIA TITAN Xp 
+
+### training
+
+1. CUB200 (Train/Val/Test Size: 5395/599/5794, please refer to our paper for other setting details.)
+
+
+model     | #GPUs | train time |
+---------|--------|-----|
+AlexNet-CNN-baseline     | 1 | ~50min    | 
+VGG16-CNN-baseline     | 2 | ~70min    |
+Res50-CNN-baseline     | 1 | ~60min    |
+AlexNet-HardnessPredictor     | 4 | ~60min    | 
+VGG16-HardnessPredictor     | 4 | ~80min   |
+Res50-HardnessPredictor     | 2 | ~70min    |
+
+2. ADE20K (Train/Val/Test Size: 18189/2021/2000, please refer to our paper for other setting details.)
+
+
+model     | #GPUs | train time |
+---------|--------|-----|
+AlexNet-CNN-baseline     | 1 | ~65min    | 
+VGG16-CNN-baseline     | 2 | ~130min    |
+Res50-CNN-baseline     | 1 | ~100min    |
+AlexNet-HardnessPredictor     | 4 | ~70min    | 
+VGG16-HardnessPredictor     | 4 | ~140min   |
+Res50-HardnessPredictor     | 2 | ~110min    |
+
+### inference
+
+Because our results are reported based on insecurities generated from 100 most difficult examples on both datasets, the inference time is the same on two datasets. We just take CUB200 as example,
+
+1. for comparison of different scores,
+
+model     | #GPUs | train time |
+---------|--------|-----|
+get_cs_cub_insecurity_vgg     | 1 | ~1min    | 
+get_entropy_cub_insecurity_vgg     | 1 | ~1min    |
+get_hp_cub_insecurity_vgg     | 1 | ~1min    |
+
+2. for comparison of different hidden layers,
+
+model     | #GPUs | train time |
+---------|--------|-----|
+get_hp_cub_insecurity_vgg     | 1 | ~1min    | 
+
+3. for comparison of different attribution maps,
+
+model     | #GPUs | train time |
+---------|--------|-----|
+get_hp_cub_insecurity_vgg     | 1 | ~1min    | 
+get_hp_cub_insecurity_vgg_IG     | 1 | ~10min    |
+get_hp_cub_insecurity_vgg_2ndG     | 1 | ~15hr    |
+
+
+4. for comparison of different architectures,
+
+model     | #GPUs | train time |
+---------|--------|-----|
+get_hp_cub_insecurity_alexnet     | 1 | ~1min    | 
+get_hp_cub_insecurity_vgg     | 1 | ~1min    | 
+get_hp_cub_insecurity_res     | 1 | ~1min    | 
+
+
 ## References
 
 [1] Ramprasaath R Selvaraju, Michael Cogswell, Abhishek Das, Ramakrishna Vedantam, Devi Parikh, and Dhruv Batra.  Grad-cam:  Visual explanations from deep networks via gradient-based localization.  In Proceedings of the IEEE International Conference on Computer Vision, pages 618–626, 2017.
