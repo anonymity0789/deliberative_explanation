@@ -117,6 +117,9 @@ get_hp_ade_insecurity_vgg_2ndG.py
 get_hp_cub_insecurity_alexnet.py
 get_hp_cub_insecurity_vgg.py
 get_hp_cub_insecurity_res.py
+get_hp_ade_insecurity_alexnet.py
+get_hp_ade_insecurity_vgg.py
+get_hp_ade_insecurity_res.py
 ```
 
 ### results presenting
