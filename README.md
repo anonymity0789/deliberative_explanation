@@ -104,9 +104,11 @@ Additionally, the layer number need to be changed for different hidden layers, 1
 3. for comparison of different attribution maps,
 ```
 get_hp_cub_insecurity_vgg.py
+get_hp_cub_insecurity_vgg_cls.py
 get_hp_cub_insecurity_vgg_IG.py
 get_hp_cub_insecurity_vgg_2ndG.py
 get_hp_ade_insecurity_vgg.py
+get_hp_ade_insecurity_vgg_cls.py
 get_hp_ade_insecurity_vgg_IG.py
 get_hp_ade_insecurity_vgg_2ndG.py
 ```
