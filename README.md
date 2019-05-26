@@ -202,6 +202,7 @@ get_hp_cub_insecurity_vgg     | 1 | ~1min    |
 model     | #GPUs | train time |
 ---------|--------|-----|
 get_hp_cub_insecurity_vgg     | 1 | ~1min    | 
+get_hp_cub_insecurity_vgg_cls     | 1 | ~1min    |
 get_hp_cub_insecurity_vgg_IG     | 1 | ~10min    |
 get_hp_cub_insecurity_vgg_2ndG     | 1 | ~15hr    |
 
