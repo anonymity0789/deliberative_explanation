@@ -10,8 +10,10 @@ from PIL import Image
 _NUM_CLASSES = {
     'cub200': 200,
     'cub200hard': 200,
+    'cub200hard_moved': 200,
     'ade': 1040,
     'adehard': 1040,
+    'adehard_moved': 1040,
 }
 
 
@@ -60,6 +62,31 @@ class ImageFilelist(data.Dataset):
     def __len__(self):
         return len(self.imlist)
 
+
+class ImageFilelist_MOVED(data.Dataset):
+    # load two images per time, one is standard and one is translation
+    def __init__(self, flist, transform=None, target_transform=None, transform_moved=None,
+                 flist_reader=default_flist_reader, loader=default_loader):
+        self.imlist = flist_reader(flist)
+        self.transform = transform
+        self.target_transform = target_transform
+        self.transform_moved = transform_moved
+        self.loader = loader
+
+    def __getitem__(self, index):
+        impath, target, index = self.imlist[index]
+        img = self.loader(impath)
+        if self.transform is not None:
+            img_stand = self.transform(img)
+        if self.target_transform is not None:
+            target = self.target_transform(target)
+        if self.transform_moved is not None:
+            img_moved = self.transform_moved(img)
+
+        return img_stand, img_moved, target, index
+
+    def __len__(self):
+        return len(self.imlist)
 
 
 def ade(batch_size, train=True, val=True, **kwargs):
@@ -148,6 +175,56 @@ def adehard(batch_size, train=True, val=True, **kwargs):
     ds = ds[0] if len(ds) == 1 else ds
     return ds
 
+def adehard_moved(batch_size, train=True, val=True, **kwargs):
+
+    train_list = './ade/ADEChallengeData2016/ADE_gt_tr.txt'
+    val_list = './ade/ADEChallengeData2016/ADEhard_gt_val.txt'
+    num_workers = kwargs.setdefault('num_workers', 1)
+    kwargs.pop('input_size', None)
+    print("Building data loader with {} workers".format(num_workers))
+    ds = []
+
+    if train:
+        train_loader = torch.utils.data.DataLoader(
+            ImageFilelist(
+                flist=train_list,
+                transform=transforms.Compose([
+                    transforms.RandomResizedCrop(224),
+                    transforms.RandomHorizontalFlip(),
+                    transforms.ToTensor(),
+                    # transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
+                    transforms.Normalize((0.4706145, 0.46000465, 0.45479808), (0.26668432, 0.26578658, 0.2706199)),
+                ])),
+            batch_size=batch_size, shuffle=True, **kwargs)
+        print("Training data size: {}".format(len(train_loader.dataset)))
+        ds.append(train_loader)
+
+
+    if val:
+        test_loader = torch.utils.data.DataLoader(
+            ImageFilelist_MOVED(
+                flist=val_list,
+                transform=transforms.Compose([
+                    transforms.Resize(256),
+                    transforms.CenterCrop(224),
+                    transforms.ToTensor(),
+                    # transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
+                    transforms.Normalize((0.4706145, 0.46000465, 0.45479808), (0.26668432, 0.26578658, 0.2706199)),
+                ]),
+                transform_moved=transforms.Compose([
+                    transforms.Resize(256),
+                    transforms.CenterCrop(256),
+                    transforms.ToTensor(),
+                    # transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
+                    transforms.Normalize((0.4706145, 0.46000465, 0.45479808), (0.26668432, 0.26578658, 0.2706199)),
+                ]),
+
+            ),
+            batch_size=batch_size, shuffle=False, **kwargs)
+        print("Testing data size: {}".format(len(test_loader.dataset)))
+        ds.append(test_loader)
+    ds = ds[0] if len(ds) == 1 else ds
+    return ds
 
 
 def cub200(batch_size, train=True, val=True, **kwargs):
@@ -236,3 +313,52 @@ def cub200hard(batch_size, train=True, val=True, **kwargs):
     return ds
 
 
+def cub200hard_moved(batch_size, train=True, val=True, **kwargs):
+
+    train_list = './cub200/CUB_200_2011/CUB200hard_gt_te.txt'
+    val_list = './cub200/CUB_200_2011/CUB200hard_gt_te.txt'
+    num_workers = kwargs.setdefault('num_workers', 1)
+    kwargs.pop('input_size', None)
+    print("Building data loader with {} workers".format(num_workers))
+    ds = []
+
+    if train:
+        train_loader = torch.utils.data.DataLoader(
+            ImageFilelist(
+                flist=train_list,
+                transform=transforms.Compose([
+                    transforms.RandomResizedCrop(224),
+                    transforms.RandomHorizontalFlip(),
+                    transforms.ToTensor(),
+                    # transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
+                    transforms.Normalize((0.4706145, 0.46000465, 0.45479808), (0.26668432, 0.26578658, 0.2706199)),
+                ])),
+            batch_size=batch_size, shuffle=True, **kwargs)
+        print("Training data size: {}".format(len(train_loader.dataset)))
+        ds.append(train_loader)
+
+    if val:
+        test_loader = torch.utils.data.DataLoader(
+            ImageFilelist_MOVED(
+                flist=val_list,
+                transform=transforms.Compose([
+                    transforms.Resize(256),
+                    transforms.CenterCrop(224),
+                    transforms.ToTensor(),
+                    # transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
+                    transforms.Normalize((0.4706145, 0.46000465, 0.45479808), (0.26668432, 0.26578658, 0.2706199)),
+                ]),
+                transform_moved=transforms.Compose([
+                    transforms.Resize(256),
+                    transforms.CenterCrop(256),
+                    transforms.ToTensor(),
+                    # transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
+                    transforms.Normalize((0.4706145, 0.46000465, 0.45479808), (0.26668432, 0.26578658, 0.2706199)),
+                ]),
+
+                ),
+            batch_size=batch_size, shuffle=False, **kwargs)
+        print("Testing data size: {}".format(len(test_loader.dataset)))
+        ds.append(test_loader)
+    ds = ds[0] if len(ds) == 1 else ds
+    return ds
