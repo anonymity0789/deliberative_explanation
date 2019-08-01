@@ -1,5 +1,8 @@
 # deliberative_explanation
 
+## Update
+
+We uploaded the code used during the author response period.
 
 ## Requirements
 
@@ -124,6 +127,26 @@ get_hp_ade_insecurity_vgg.py
 get_hp_ade_insecurity_res.py
 ```
 
+5. robustness to shifts (Added during the author response period),
+
+```
+get_cs_cub_insecurity_vgg_robustness.py
+get_entropy_cub_insecurity_vgg_robustness.py
+get_hp_cub_insecurity_vgg_robustness.py
+get_hp_cub_insecurity_vgg_IG_robustness.py
+get_hp_cub_insecurity_vgg_2ndG_robustness.py
+```
+
+6. contribution of insecurities to the prediction (Added during the author response period),
+
+```
+get_cs_cub_insecurity_vgg_correlation.py
+get_entropy_cub_insecurity_vgg_correlation.py
+get_hp_cub_insecurity_vgg_correlation.py
+get_hp_cub_insecurity_vgg_IG_correlation.py
+get_hp_cub_insecurity_vgg_2ndG_correlation.py
+```
+
 ### results presenting
 
 1. insecurity extraction,
@@ -142,6 +165,17 @@ plot_recall_precision_curve_std.py
 
 ```
 output_IOU_threshold_std.py
+```
+
+4. plot the IoU-threshold curves on CUB200 (Added during the author response period),
+
+```
+plot_threshold_robustness_curve.py
+```
+
+5. show Pearson correlation coefficient on CUB200 (Added during the author response period),
+```
+compute_pearson_rp_insecurity_precision.py
 ```
 
 ### pretrained models
@@ -185,7 +219,7 @@ Because our results are reported based on insecurities generated from 100 most d
 
 1. for comparison of different scores,
 
-model     | #GPUs | train time |
+model     | #GPUs | time |
 ---------|--------|-----|
 get_cs_cub_insecurity_vgg     | 1 | ~1min    | 
 get_entropy_cub_insecurity_vgg     | 1 | ~1min    |
@@ -193,13 +227,13 @@ get_hp_cub_insecurity_vgg     | 1 | ~1min    |
 
 2. for comparison of different hidden layers,
 
-model     | #GPUs | train time |
+model     | #GPUs | time |
 ---------|--------|-----|
 get_hp_cub_insecurity_vgg     | 1 | ~1min    | 
 
 3. for comparison of different attribution maps,
 
-model     | #GPUs | train time |
+model     | #GPUs | time |
 ---------|--------|-----|
 get_hp_cub_insecurity_vgg     | 1 | ~1min    | 
 get_hp_cub_insecurity_vgg_cls     | 1 | ~1min    |
@@ -209,11 +243,32 @@ get_hp_cub_insecurity_vgg_2ndG     | 1 | ~15hr    |
 
 4. for comparison of different architectures,
 
-model     | #GPUs | train time |
+model     | #GPUs | time |
 ---------|--------|-----|
 get_hp_cub_insecurity_alexnet     | 1 | ~1min    | 
 get_hp_cub_insecurity_vgg     | 1 | ~1min    | 
 get_hp_cub_insecurity_res     | 1 | ~1min    | 
+
+5. robustness to shifts (Added during the author response period),
+
+model     | #GPUs | time |
+---------|--------|-----|
+get_cs_cub_insecurity_vgg_robustness  | 1 | ~1min    | 
+get_entropy_cub_insecurity_vgg_robustness | 1 | ~1min    | 
+get_hp_cub_insecurity_vgg_robustness | 1 | ~1min    | 
+get_hp_cub_insecurity_vgg_IG_robustness | 1 | ~10min    |
+get_hp_cub_insecurity_vgg_2ndG_robustness | 1 | ~15hr    |
+
+
+6. contribution of insecurities to the prediction (Added during the author response period),
+
+model     | #GPUs | time |
+---------|--------|-----|
+get_cs_cub_insecurity_vgg_correlation | 1 | ~1min    | 
+get_entropy_cub_insecurity_vgg_correlation | 1 | ~1min    | 
+get_hp_cub_insecurity_vgg_correlation | 1 | ~1min    | 
+get_hp_cub_insecurity_vgg_IG_correlation | 1 | ~10min    |
+get_hp_cub_insecurity_vgg_2ndG_correlation  | 1 | ~15hr    |
 
 
 ## References
